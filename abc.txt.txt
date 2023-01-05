@@ -1,0 +1,331 @@
+Create a table
+
+CREATE TABLE PARTICIPANT (
+PID NUMBER(4) NOT NULL,
+PNAME VARCHAR2(25) NOT NULL,
+GENDER CHAR(1) NOT NULL,
+CID NUMBER(3),
+CONSTRAINT PARTICIPANT_PK_PID PRIMARY KEY (PID),
+CONSTRAINT PARTICIPANT_CK_PID CHECK (PID BETWEEN 1001 AND 9999),
+CONSTRAINT PARTICIPANT_CK_GENDER CHECK (GENDER IN ( 'M', 'F' )),
+CONSTRAINT PARTICIPANT_FK_COURSE_CID FOREIGN KEY
+(CID) REFERENCES COURSE(CID)
+
+);
+
+Order By Statement
+
+SELECT *
+FROM PARTICIPANT
+WHERE GENDER = 'F'
+ORDER BY CID DESC;
+
+Remove fk and reinstate it
+
+ALTER TABLE PARTICIPANT
+    DROP CONSTRAINT PARTICIPANT_FK_COURSE_CID;
+
+ALTER TABLE PARTICIPANT
+    ADD CONSTRAINT PARTICIPANT_FK_COURSE_CID
+    FOREIGN KEY (CID) REPERENCES COURSE(CID)
+    ON DELETE CASCADE;
+    
+SELECT TABLE_NAME, CONSTRAINT_NAME,
+    CONSTRAINT_TYPE, DELETE_RULE
+    FROM USER_CONSTRAINTS
+    WHERE CONSTRAINT_NAME LIKE PARTICIPANT_FK%';
+
+The Cartesian Product or Cross Join
+
+The Oracle 11q Wau
+    SELECT
+        FROM PARTICIPANT_1 CROSS JOIN PARTICIPANT_2;
+The Legacy Way
+    SELECT *
+        FROM PARTICIPANT_1, PARTICIPANT_2
+
+
+The Equi Join
+
+The Qracle 11g Wau
+    SELECT *
+        FROM PARTICIPANT_1 P1 JOIN PARTICIPANT_2 P2
+        ON P1.PID = P2.PID;
+
+The Legacy Wau
+    SELECT*
+        FROM PARTICIPANT_1 P1, PARTICIPANT_2 P2
+        WHERE P1.PID = P2. PID;
+
+The Natural Join
+
+    SELECT *
+        FROM PARTICIPANT_1 NATURAL JOIN PARTICIPANT_2;
+
+The Left Outer Join
+The Oracle 11g Way
+
+    SELECT
+        FROM PARTICIPANT_1 P1 LEFT OUTER JOIN PARTICIPANT_2 P2
+        ON P1.PID = P2.PID;
+The Legacy Waų
+
+    SELECT*
+        FROM PARTICIPANT_1 P1, PARTICIPANT_2 P2
+        WHERE P1.PID = P2. PID (+);
+
+The Right Outer Join
+The Oracle 11g Wau
+
+    SELECT
+        FROM PARTICIPANT_1 P1 RIGHT OUTER JOIN PARTICIPANT_2 P2
+        ON P1.PID = P2.PID;
+
+The Legacy Wau
+
+    SELECT*
+        FROM PARTICIPANT_1 P1, PARTICIPANT_2 P2
+        WHERE P1.PID (+) = P2.PID;
+
+The Full Outer Join
+The Oracle 11q Wa
+    SELECT
+        FROM PARTICIPANT_1 P1 FULL OUTER JOIN PARTICIPANT_2 P2
+        ON P1.PID = P2.PID;
+
+The Set Union
+    SELECT * FROM PARTICIPANT_1
+        UNION
+    SELECT * FROM PARTICIPANT_2;
+
+The Set Dijference
+    SELECT * FROM PARTICIPANT_1
+        MINUS
+    SELECT * FROM PARTICIPANT_2;
+
+
+The Set Intersection
+    SELECT * FROM PARTICIPANT_1
+        INTERSECT
+    SELECT * FROM PARTICIPANT_2;
+
+The Set Intersection using Differen.ce
+    SELECT FROM PARTICIPANT_1
+        MINUS (
+            SELECT * FROM PARTICIPANT_1
+                MINUS
+            SELECT * FROM PARTICIPANT_2);
+            
+SELECT PNAME " Name of Attendee", CREDIT *200-100 "Term Fee"
+    FROM COURSE C JOIN PARTICIPANT P
+    ON C.CID = P.CID;
+
+SELECT * FROM ATTENDEE
+    WHERE UPPER (NAME) LIKE 'A%';
+
+SEQUENCE
+
+CREATE SEQUENCE sequence_name
+[ START WITH start _num | [ INCREMENT BY increment_num]
+MAXVALUE mar_num | NOMAXVALUE]
+MINVALUE min_num | NOMINVALUE] [ CYCLE | NOCYCLE]
+[CACHE cache num | NOCACHE] [ ORDER | NOORDER ];
+
+vIEW
+
+CREATE OR REPLACE VIEW TEST_VW AS
+    SELECT * FROM COURSE;
+
+sYNONYM
+
+CREATE PUBLIC SYNONYM EMP_SN_01
+    FOR ABc01.EMP;
+
+INDEX
+
+CREATE INDEX PARTICIPANT_NDX_PHONE
+    ON PARTICIPANT(PHONE);
+CREATE UNIQUE INDEX PARTICIPANTNDX_LNAME
+    ON PARTICIPANT(LNAME);
+
+pATTERN MATCHING
+
+SELECT ono, fname| T T| Lname as "staffName", address
+    FROM Owner
+    WHERE address LIKE %Glasgow,';
+SQL has two special pattern-matching symbols:
+'%' percent character represents any sequence of zero or moTe chaTacters.
+'_' character represents any single character.
+
+COUNT USAGE 
+
+Use of COUNT (DISTINCT)
+How many different properties were viewed in May 2004?
+    SELECT COUNT (DISTINCT pno) as myCount
+        FROM Viewing
+        WHERE vdate BETWEEN 01-MAY-04' AND '31-MAY-04';
+
+JOINS
+
+Sorting a Join
+    SELECT s.bno, s.sno, fName, LName, pno
+        FROM Staff s, Property_For_Rent p
+        WHERE s.sno = p.sno
+        ORDER BY s.bno, s.sno, pno;
+
+Three-Table Join
+    SELECT b.bno, b.city, s.sno, fName, lName, pno
+        FROM Branch b, Staff s, Property_For_Rent p
+        WHERE b.bno = s.bno AND s.sno = p.sno
+        ORDER BY b.bno, s.sno, pno;
+
+Left Outer join
+    SELECT b.*, p.*
+        FROM Branch b LEFT JOIN Property_ For_Rent p
+        ON b.city = p.city;
+List all properties and any branch ojfices that are in the same cily.
+Right Outer join
+    SELECT b.*, p.*
+        FROM Branch b RIGHT JOIN Property_For_Rent p
+        ON b.city= p.city;
+List the branch offjices and properties that are in the same city along with any
+unmatched branches or properties.
+Full Outer join 
+        SELECT b. *, p.*
+            FROM Branch b FULL JOIN Property_For_Rent p
+            ON b.city p.city;
+
+ANONYMOUS BLOCK
+
+DECLARE
+    PI CONSTANT NUMBER (7, 5) := 3.14159;
+    V_RAD INTEGER( 3)
+    V_VOL NUMBER (9, 2) ;
+BEGIN
+    V_RAD := 7;
+    V_VOL := PI * POWER (V_RAD, 3) * (4/3);
+    DBMS_OUTPUT. PUT_LINE ('VoLume of Sphere With Radius ' | | VRAD
+    I| 'is' || V_VOL || 'Cu. units.') ;
+END
+/
+
+eXCEPTION
+
+DECLARE
+    V_NUM1 INTEGER &N01;
+    V_NUM2 INTEGER &NO02;
+    V_OUT NUMBER;
+BEGIN
+    V_OUT= V_NUM1/ V_NUM2;
+    DBMS OUTPUT. PUT_LINE (OResult: O| IV_OUT) ;
+EXCEPTION
+    WHEN ZERO_DIVIDE THEN
+    DBMS OUTPUT. PUT_LINE (ODIVIDE BY ZERO ERROR...);
+END;
+
+DECLARE
+    V_ROLL STUDENT. ROLL%TYPE  := &ROLL_NO;
+    V_KOUNT NUMBER;
+    E_INVALID_ID EXCEPTION;
+BEGIN
+    IF V_ROLL < 0 THEN
+        RAISE E_INVALID_ID;
+ELSE
+    SELECT COUNT(*) INTO V_KOUNT
+        FROM STUDENT
+        WHERE ROLL= V_ROLL;
+        DEMS OUTPUT. PUT_LINE (Ostudent ExistS. .O);
+        END IF;
+        DBMS_OUTPUT. PUT_LINE (ONO Error. . .0);
+    EXCEPTION
+        WHEN E_INVALID_ID THEN
+            DBMS_OUTPUT. PUT_LINE (OROll Number cannot be Negative.);
+END;
+
+
+fUNCTION
+
+CREATE OR REPLACE FUNCTION IS_VALID_SID
+    (STAFF_ID IN STAFF. SID%TYPE)
+RETURN BOOLEAN AS
+    V_KNT NUMBER;
+BEGIN
+    SELECT coUNT (*) INTO V_KNT
+        FROM STAFF WHERE SID = STAFF_ID;
+        RETURN 1 = V_KNT;  if V_KNT is 1, it evaluates to TRUE
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN FALSE;
+END;
+
+hOW TO INVOKE?
+
+DECLARE
+    V_DESCRIPT VARCHAR2 (80)
+BEGIN
+    V_DESCRIPT := SHOW_STAFF_DETAILS (&STAFF_ID);
+    DBMS OUTPUT. PUT_LINE (V_DESCRIPT);
+    DBMS OUTPUT. PUT_LINE (O.. DONE..);
+END;
+
+pROCEDURE
+
+CREATE OR REPLACE PROCEDURE HOW_ MANY_PRODUCTS BY_VENDOR
+    (V_VENDOR PRODUCT. V_CODE%TYPE) AS
+    v_PRODUCT_COUNT NUMBER
+BEGIN
+    SELECT cOUNT (P_cODE) INTO V_PRODUCT_COUNT
+        FROM PRODUCT
+        WHERE V_VODE = V_VENDOR;
+    DBMSOUTPUT. PUT_LINE (©Vendor ID | |V_VENDOR | I1 supplies ©ll
+        V_PRODUer COUNT|O products . .C);
+EXCEPTION
+    WHEN OTHERS THEN
+    DBMS OUTPUT. PUT_LINE (©Vendor ID ©I|V_VENDOR| |
+    does not exist or do not supply any product. .o)
+END;
+
+INVOKE PROCEDURE
+
+DECLARE
+    V_VENDOR VENDOR.V_CODE%TYPE := &VENDOR_NUMBER;
+BEGIN
+    HOW_MANY_PRODUCTS_BY_VENDOR (V_VENDOR);
+    DBMS_OUTPUT. PUT_LINE (O.. DONE.);
+END;
+
+cURSOR
+
+DECLARE
+    CURSOR C_PRODUCT_INFO IS                   --declaring a Cursor
+        SELECT P_CODE, DESCRIPT, V_CODE
+        FROM PRODUCT;|
+V_PART c_PRODUCT_INFO%ROWTYPE ;                --Cursor-based record
+BEGIN
+    OPEN CPRODUCT_INFO;                             --opening a cursor
+    LOOP
+        FETCH C_PRODUCT_INFO INTO V_PART;              --fetching a cursor
+        EXIT WHEN CPRODUCT_INFO%NOTFOUND;
+    DBMS OUTPUT. PUT_LINE (V_PART. P_CODE| ©: O|I
+    V_PART. DESCRIPT| |O -- O|V_PART. V_CODE) ;
+    END LOOP;
+    CLOSE C_PRODUCT_INFO;                          --Clos1ng a cursor
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
